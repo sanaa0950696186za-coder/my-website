@@ -3,219 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rimuru AI - Power Systems Exam Center</title>
+    <title>Rimuru Slime AI - Ultimate Power Systems Academy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Prompt', sans-serif; background-color: #0b0f19; color: #e2e8f0; overflow-x: hidden; }
-        .rimuru-glow { box-shadow: 0 0 25px rgba(56, 189, 248, 0.4); }
-        .rimuru-border { border: 1px solid rgba(56, 189, 248, 0.3); }
-        .slime-logo {
-            width: 50px; height: 50px; background: radial-gradient(circle at 30% 30%, #38bdf8, #0369a1);
-            border-radius: 50%; box-shadow: 0 0 20px #38bdf8; animation: float 3s ease-in-out infinite;
+        body { 
+            font-family: 'Prompt', sans-serif; 
+            background: linear-gradient(135deg, #070b19 0%, #0f172a 100%); 
+            color: #e2e8f0; 
+            overflow-x: hidden; 
+            min-height: 100vh;
         }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .menu-card:hover { box-shadow: 0 0 20px rgba(56, 189, 248, 0.6); transform: translateY(-5px); }
+        .rimuru-glow { box-shadow: 0 0 30px rgba(56, 189, 248, 0.35); }
+        .rimuru-border { border: 2px solid rgba(56, 189, 248, 0.4); }
+        
+        /* สไลม์อนิเมชั่นสุดน่ารัก */
+        .slime-container {
+            position: relative;
+            width: 60px; height: 60px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .slime-ball {
+            width: 50px; height: 50px; 
+            background: radial-gradient(circle at 30% 30%, #38bdf8, #0284c7);
+            border-radius: 50% 50% 45% 45%; 
+            box-shadow: inset -5px -5px 15px rgba(3, 105, 161, 0.8), 0 0 25px #38bdf8;
+            animation: slimeBounce 2.5s ease-in-out infinite;
+            position: relative;
+        }
+        .slime-ball::before {
+            content: '•   •';
+            position: absolute; top: 12px; left: 12px;
+            color: #ffffff; font-size: 14px; font-weight: bold; letter-spacing: 4px;
+            text-shadow: 0 0 5px rgba(255,255,255,0.8);
+        }
+        @keyframes slimeBounce { 
+            0%, 100% { transform: translateY(0) scale(1, 1); border-radius: 50% 50% 45% 45%; } 
+            50% { transform: translateY(-12px) scale(1.05, 0.95); border-radius: 45% 45% 50% 50%; } 
+        }
+
+        .menu-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+        }
+        .menu-card:hover { 
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.6); 
+            transform: translateY(-8px) scale(1.02); 
+            border-color: #38bdf8;
+        }
+
+        /* เอฟเฟกต์เรืองแสงปุ่ม */
+        .btn-rimuru {
+            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+        }
+        .btn-rimuru:hover {
+            filter: brightness(1.15);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.7);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center py-8 px-4">
+<body class="flex flex-col items-center py-8 px-4 justify-between">
 
     <!-- Header -->
-    <header class="w-full max-w-5xl flex items-center justify-between p-4 rimuru-border bg-slate-900/80 rounded-2xl rimuru-glow mb-8 cursor-pointer" onclick="showMainMenu()">
+    <header class="w-full max-w-5xl flex items-center justify-between p-5 rimuru-border bg-slate-900/90 rounded-3xl rimuru-glow mb-8 cursor-pointer" onclick="showMainMenu()">
         <div class="flex items-center space-x-4">
-            <div class="slime-logo"></div>
+            <div class="slime-container">
+                <div class="slime-ball"></div>
+            </div>
             <div>
-                <h1 class="text-2xl font-bold text-sky-400 tracking-wide">Rimuru Study System</h1>
-                <p class="text-sm text-slate-400">Great Sage Core • Power Systems (No PDF Required)</p>
+                <h1 class="text-2xl font-extrabold text-sky-400 tracking-wide drop-shadow-[0_0_10px_rgba(56,189,248,0.5)]">
+                    ริมุรุ เทมเพสต์ สุพรีม สตูดิโอ
+                </h1>
+                <p class="text-xs text-slate-300">Great Sage Core • Power Systems Academy (430 Questions Total)</p>
             </div>
         </div>
-        <button class="hidden md:block bg-sky-900/50 text-sky-300 px-4 py-2 rounded-lg border border-sky-700 hover:bg-sky-800 transition">
-            🏠 กลับหน้าหลัก
+        <button class="hidden md:flex items-center space-x-2 bg-sky-950/80 text-sky-300 px-5 py-2.5 rounded-xl border border-sky-600/60 hover:bg-sky-900 transition shadow-lg">
+            <span>🏠</span> <span>กลับหน้าหลัก</span>
         </button>
     </header>
 
-    <!-- Main Menu Screen -->
-    <div id="main-menu" class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Main Menu Screen (3 เมนูหลักสุดน่ารัก) -->
+    <div id="main-menu" class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
         
-        <!-- Mode 1 -->
-        <div onclick="startQuiz('ai')" class="menu-card bg-slate-800/80 border border-slate-700 p-8 rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center">
-            <div class="text-5xl mb-4">🧠</div>
+        <!-- Mode 1: AI 400 ข้อ -->
+        <div onclick="startQuiz('ai')" class="menu-card border border-slate-700 p-8 rounded-3xl cursor-pointer flex flex-col items-center text-center group">
+            <div class="text-6xl mb-4 group-hover:scale-125 transition transform duration-300">🧠</div>
             <h2 class="text-xl font-bold text-sky-300 mb-2">1. คลังข้อสอบ AI</h2>
-            <p class="text-sm text-slate-400">ข้อสอบทฤษฎีระบบกำลังไฟฟ้า 400 ข้อ (สกัดจากบทที่ 6-9) เน้นคอนเซ็ปต์ล้วน</p>
+            <p class="text-xs text-slate-400 leading-relaxed">ข้อสอบทฤษฎีระบบกำลังไฟฟ้า 400 ข้อ จัดเต็มไม่ซ้ำ สกัดจากบทที่ 6-9 เน้นคอนเซ็ปต์และทฤษฎี</p>
+            <span class="mt-6 text-xs bg-sky-900/40 text-sky-300 px-4 py-1.5 rounded-full border border-sky-700/50">400 ข้อ</span>
         </div>
 
-        <!-- Mode 2 -->
-        <div onclick="startQuiz('prof')" class="menu-card bg-slate-800/80 border border-slate-700 p-8 rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center">
-            <div class="text-5xl mb-4">📝</div>
-            <h2 class="text-xl font-bold text-emerald-300 mb-2">2. คลังข้อสอบเก่าอาจารย์</h2>
-            <p class="text-sm text-slate-400">รวมข้อสอบกากบาทและเติมคำจากชีทของอาจารย์ พร้อมเฉลยเป๊ะๆ</p>
+        <!-- Mode 2: ข้อสอบเก่าอาจารย์ 30 ข้อ -->
+        <div onclick="startQuiz('prof')" class="menu-card border border-slate-700 p-8 rounded-3xl cursor-pointer flex flex-col items-center text-center group">
+            <div class="text-6xl mb-4 group-hover:scale-125 transition transform duration-300">📝</div>
+            <h2 class="text-xl font-bold text-emerald-300 mb-2">2. ข้อสอบเก่าอาจารย์</h2>
+            <p class="text-xs text-slate-400 leading-relaxed">รวมข้อสอบกากบาทและแปลงเติมคำจากชีทรวม 30 ข้อตรงเป๊ะ พร้อมเฉลยและคำอธิบายละเอียด</p>
+            <span class="mt-6 text-xs bg-emerald-900/40 text-emerald-300 px-4 py-1.5 rounded-full border border-emerald-700/50">30 ข้อ</span>
         </div>
 
-        <!-- Mode 3 -->
-        <div onclick="showMemoryScreen()" class="menu-card bg-slate-800/80 border border-slate-700 p-8 rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center">
-            <div class="text-5xl mb-4">🔗</div>
+        <!-- Mode 3: เทคนิคการจำมหาปราชญ์ -->
+        <div onclick="showMemoryScreen()" class="menu-card border border-slate-700 p-8 rounded-3xl cursor-pointer flex flex-col items-center text-center group">
+            <div class="text-6xl mb-4 group-hover:scale-125 transition transform duration-300">🔗</div>
             <h2 class="text-xl font-bold text-amber-300 mb-2">3. เทคนิคการจำ (มหาปราชญ์)</h2>
-            <p class="text-sm text-slate-400">สรุปสูตรลัดและคีย์เวิร์ดเชื่อมโยง สำหรับอ่านหน้าห้องสอบ</p>
+            <p class="text-xs text-slate-400 leading-relaxed">สรุปสูตรลัด คีย์เวิร์ดเชื่อมโยง จุดตายออกสอบบ่อย สำหรับอ่านทบทวนหน้าห้องสอบ</p>
+            <span class="mt-6 text-xs bg-amber-900/40 text-amber-300 px-4 py-1.5 rounded-full border border-amber-700/50">สรุปเน้นๆ</span>
         </div>
     </div>
 
     <!-- Quiz Screen -->
-    <div id="quiz-screen" class="hidden w-full max-w-4xl bg-slate-900/90 p-6 md:p-8 rounded-2xl rimuru-border rimuru-glow">
-        <div class="flex justify-between items-center mb-6 text-sm text-slate-400 border-b border-slate-700 pb-4">
-            <span id="quiz-title" class="font-semibold text-sky-400 text-lg">โหมดข้อสอบ</span>
-            <div>
-                <span id="question-progress" class="mr-4">ข้อที่ 1 / X</span>
-                <span id="score-tracker" class="text-emerald-400 font-bold bg-emerald-900/30 px-3 py-1 rounded-full">คะแนน: 0</span>
+    <div id="quiz-screen" class="hidden w-full max-w-4xl bg-slate-900/95 p-6 md:p-10 rounded-3xl rimuru-border rimuru-glow my-auto">
+        <div class="flex justify-between items-center mb-6 text-sm text-slate-400 border-b border-slate-800 pb-4">
+            <span id="quiz-title" class="font-bold text-sky-400 text-lg flex items-center">✨ โหมดข้อสอบ</span>
+            <div class="flex items-center space-x-4">
+                <span id="question-progress" class="text-slate-300 bg-slate-800 px-3 py-1 rounded-xl">ข้อที่ 1 / X</span>
+                <span id="score-tracker" class="text-emerald-300 font-bold bg-emerald-950/60 border border-emerald-600/50 px-4 py-1 rounded-xl">คะแนน: 0</span>
             </div>
         </div>
         
-        <div id="question-text" class="text-xl font-medium text-white mb-8 leading-relaxed">
+        <div id="question-text" class="text-lg md:text-xl font-medium text-white mb-8 leading-relaxed bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
             <!-- โจทย์ -->
         </div>
 
-        <div id="options-container" class="space-y-4 mb-8">
+        <div id="options-container" class="space-y-3.5 mb-8">
             <!-- ตัวเลือก -->
         </div>
 
-        <div id="explanation-box" class="hidden p-5 rounded-xl bg-slate-950 border border-sky-500/50 mb-6 shadow-inner">
-            <span class="font-bold text-sky-400 block mb-2 flex items-center">
-                <span class="text-xl mr-2">💡</span> มหาปราชญ์วิเคราะห์:
+        <div id="explanation-box" class="hidden p-5 rounded-2xl bg-slate-950 border border-sky-500/40 mb-6 shadow-inner animate-pulse">
+            <span class="font-bold text-sky-400 block mb-2 flex items-center text-base">
+                <span class="text-2xl mr-2">💡</span> มหาปราชญ์วิเคราะห์ (Great Sage Analysis):
             </span>
-            <p id="explanation-text" class="text-slate-300 leading-relaxed"></p>
+            <p id="explanation-text" class="text-slate-300 text-sm leading-relaxed"></p>
         </div>
 
-        <div class="flex justify-between">
-            <button onclick="showMainMenu()" class="text-slate-400 hover:text-white transition">← ออกจากแบบทดสอบ</button>
-            <button id="next-btn" onclick="nextQuestion()" class="hidden bg-sky-600 hover:bg-sky-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-[0_0_15px_rgba(56,189,248,0.5)]">
+        <div class="flex justify-between items-center pt-2 border-t border-slate-800">
+            <button onclick="showMainMenu()" class="text-slate-400 hover:text-white transition flex items-center space-x-1 text-sm">
+                <span>←</span> <span>ออกสู่เมนูหลัก</span>
+            </button>
+            <button id="next-btn" onclick="nextQuestion()" class="hidden btn-rimuru text-white px-8 py-3 rounded-2xl font-bold transition-all text-sm">
                 ข้อถัดไป ➔
             </button>
         </div>
     </div>
 
     <!-- Memory Techniques Screen -->
-    <div id="memory-screen" class="hidden w-full max-w-5xl bg-slate-900/90 p-6 md:p-8 rounded-2xl rimuru-border rimuru-glow">
-        <h2 class="text-2xl font-bold text-amber-400 mb-6 flex items-center"><span class="text-3xl mr-3">🔗</span> สรุปเทคนิคการจำ (Great Sage Linking)</h2>
+    <div id="memory-screen" class="hidden w-full max-w-5xl bg-slate-900/95 p-6 md:p-10 rounded-3xl rimuru-border rimuru-glow my-auto">
+        <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+            <h2 class="text-2xl font-bold text-amber-400 flex items-center">
+                <span class="text-3xl mr-3">🔗</span> สรุปเทคนิคการจำด่วน (Great Sage Linking)
+            </h2>
+            <button onclick="showMainMenu()" class="text-xs bg-slate-800 text-slate-300 px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-700">ปิดหน้านี้</button>
+        </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Card 1 -->
-            <div class="bg-slate-800 p-5 rounded-xl border border-slate-600">
-                <h3 class="text-sky-300 font-bold mb-3">⚡ เรื่อง Fault (ความผิดปกติ)</h3>
+            <div class="bg-slate-950/80 p-6 rounded-2xl border border-slate-800 hover:border-sky-500/50 transition">
+                <h3 class="text-sky-300 font-bold mb-3 flex items-center"><span class="text-xl mr-2">⚡</span> 1. เรื่อง Fault (ความผิดปกติ)</h3>
                 <ul class="list-disc pl-5 text-slate-300 space-y-2 text-sm">
-                    <li><strong class="text-rose-400">บ่อยสุด:</strong> Single line to ground fault (เส้นเดียวลงดิน)</li>
-                    <li><strong class="text-rose-400">รุนแรงสุด:</strong> Three phase fault (ลัดวงจร 3 เฟส)</li>
-                    <li><strong class="text-white">สาเหตุหลัก:</strong> สภาพอากาศ, ฟ้าผ่า, สัตว์, ความประมาทของคน</li>
+                    <li><strong class="text-rose-400">เกิดบ่อยสุด:</strong> Single line to ground fault (เส้นเดียวลงดิน)</li>
+                    <li><strong class="text-rose-400">รุนแรงที่สุด:</strong> Three phase fault (ลัดวงจร 3 เฟส)</li>
+                    <li><strong class="text-white">สาเหตุหลัก:</strong> สภาพอากาศ, ฟ้าผ่า, สัตว์, ความประมาท (รถชนเสา, เผาไร่อ้อย)</li>
                 </ul>
             </div>
 
-            <!-- Card 2 -->
-            <div class="bg-slate-800 p-5 rounded-xl border border-slate-600">
-                <h3 class="text-sky-300 font-bold mb-3">📉 เรื่อง Power Quality (คุณภาพไฟฟ้า)</h3>
+            <div class="bg-slate-950/80 p-6 rounded-2xl border border-slate-800 hover:border-emerald-500/50 transition">
+                <h3 class="text-emerald-300 font-bold mb-3 flex items-center"><span class="text-xl mr-2">📉</span> 2. เรื่อง Power Quality (คุณภาพไฟฟ้า)</h3>
                 <ul class="list-disc pl-5 text-slate-300 space-y-2 text-sm">
-                    <li><strong class="text-emerald-400">Voltage Sag (ไฟตก):</strong> ตกช่วงสั้นๆ (มักเกิดจากสตาร์ทมอเตอร์ใหญ่)</li>
-                    <li><strong class="text-emerald-400">Voltage Swell (ไฟเกิน):</strong> เกินช่วงสั้นๆ (มักเกิดจากสับสวิตช์ปลดโหลด)</li>
-                    <li><strong class="text-emerald-400">Harmonic (ฮาร์มอนิก):</strong> เกิดจาก <span class="underline">อุปกรณ์อิเล็กทรอนิกส์กำลัง</span> / โหลดไม่เชิงเส้น</li>
-                    <li><strong class="text-emerald-400">Transient (ชั่วครู่):</strong> ฟ้าผ่า (Impulsive) หรือ สวิตชิ่ง (Oscillatory)</li>
+                    <li><strong class="text-emerald-400">Voltage Sag (ไฟตก):</strong> 0.1-0.9 pu นาน 10ms-1min (สตาร์ตมอเตอร์)</li>
+                    <li><strong class="text-emerald-400">Voltage Swell (ไฟเกิน):</strong> 1.1-1.8 pu (ปลดโหลดใหญ่/ต่อคาปาซิเตอร์)</li>
+                    <li><strong class="text-emerald-400">Harmonics:</strong> เกิดจากอุปกรณ์ Non-linear / อิเล็กทรอนิกส์กำลัง</li>
+                    <li><strong class="text-emerald-400">Transient:</strong> ฟ้าผ่า (Impulsive) หรือ สวิตชิ่ง (Oscillatory)</li>
                 </ul>
             </div>
 
-            <!-- Card 3 -->
-            <div class="bg-slate-800 p-5 rounded-xl border border-slate-600">
-                <h3 class="text-sky-300 font-bold mb-3">📊 เรื่อง Load Factor & Demand</h3>
+            <div class="bg-slate-950/80 p-6 rounded-2xl border border-slate-800 hover:border-purple-500/50 transition">
+                <h3 class="text-purple-300 font-bold mb-3 flex items-center"><span class="text-xl mr-2">📊</span> 3. สูตรคำนวณ Load & Demand</h3>
                 <ul class="list-disc pl-5 text-slate-300 space-y-2 text-sm">
                     <li><strong class="text-purple-400">Demand Factor:</strong> Max Demand / Total Connected Load</li>
-                    <li><strong class="text-purple-400">Load Factor:</strong> โหลดเฉลี่ย (Mean) / โหลดสูงสุด (Max)</li>
-                    <li><strong class="text-purple-400">Diversity Factor:</strong> ผลรวม Max ย่อย / Max รวมของระบบ (>1 เสมอ)</li>
-                    <li><strong class="text-purple-400">Base Load:</strong> โหลดต่ำสุดที่ต้องจ่ายตลอดเวลา</li>
+                    <li><strong class="text-purple-400">Load Factor:</strong> โหลดเฉลี่ย (Pmean) / โหลดสูงสุด (Pmax)</li>
+                    <li><strong class="text-purple-400">Diversity Factor:</strong> ผลรวม Max ย่อย / Max รวมของระบบ (<span class="text-amber-300 font-bold">> 1 เสมอ</span>)</li>
+                    <li><strong class="text-purple-400">Loss Factor:</strong> $0.3(LF) + 0.7(LF)^2$</li>
                 </ul>
             </div>
 
-            <!-- Card 4 -->
-            <div class="bg-slate-800 p-5 rounded-xl border border-slate-600">
-                <h3 class="text-sky-300 font-bold mb-3">🔮 เรื่อง Demand Forecasting (พยากรณ์)</h3>
+            <div class="bg-slate-950/80 p-6 rounded-2xl border border-slate-800 hover:border-amber-500/50 transition">
+                <h3 class="text-amber-300 font-bold mb-3 flex items-center"><span class="text-xl mr-2">🔮</span> 4. เรื่อง Demand Forecasting</h3>
                 <ul class="list-disc pl-5 text-slate-300 space-y-2 text-sm">
-                    <li><strong class="text-amber-400">เป้าหมาย (ระยะยาว):</strong> วางแผนสร้างโรงไฟฟ้าและระบบส่ง</li>
-                    <li><strong class="text-amber-400">โมเดลยอดฮิต:</strong> End-use model (แบบจำลองผู้ใช้หน่วยสุดท้าย) / Bottom-up</li>
-                    <li><strong class="text-amber-400">เชื้อเพลิงหลักไทย กฟผ.:</strong> ก๊าซธรรมชาติ (มากที่สุด)</li>
-                    <li><strong class="text-amber-400">แผน PDP2558-2579:</strong> เน้นเพิ่ม "พลังงานหมุนเวียน" และ "ความร้อนร่วม"</li>
+                    <li><strong class="text-amber-400">เป้าหมายระยะยาว:</strong> วางแผนสร้างโรงไฟฟ้าและขยายระบบสายส่ง</li>
+                    <li><strong class="text-amber-400">โมเดลยอดฮิต:</strong> End-use model (Bottom-up)</li>
+                    <li><strong class="text-amber-400">เชื้อเพลิงหลักไทย:</strong> ก๊าซธรรมชาติ (สัดส่วนสูงกว่า 70%)</li>
+                    <li><strong class="text-amber-400">แผน PDP2015:</strong> สิ้นปี 2579 กำลังผลิตสุทธิ 70,335 MW (เน้นพลังงานหมุนเวียน)</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- Script Data & Logic -->
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-xs text-slate-500">
+        Rimuru Slime AI Study Environment • Hosted on GitHub Pages (All 430 Questions Embedded)
+    </footer>
+
+    <!-- นำเข้าไฟล์ข้อสอบแยก -->
+    <script src="questions.js"></script>
+
+    <!-- App Logic -->
     <script>
-        // ---------------------------------------------------------
-        // ---------------------------------------------------------
-        // 1. ฐานข้อมูลข้อสอบอาจารย์ (ดึงจากรูปภาพ 1-5 ครบ 30 ข้อ)
-        // ---------------------------------------------------------
-        const profData = [
-            // --- ชุดที่ 1: สถานีไฟฟ้าและสวิตช์เกียร์ (ดัดแปลงจากเติมคำ) ---
-            { q: "หน้าที่หลักของสถานีไฟฟ้า คืออะไร?", opts: ["ผลิตกระแสไฟฟ้า", "เปลี่ยนแปลงแรงดันไฟฟ้า (Step up/down) และควบคุมการจ่ายไฟ", "แปลงไฟ AC เป็น DC เท่านั้น", "พยากรณ์ความต้องการไฟฟ้า"], ans: 1, exp: "หน้าที่หลักคือการรับ ส่ง และแปลงระดับแรงดันไฟฟ้า (Step up / Step down) เพื่อให้เหมาะสมกับการส่งและจ่ายโหลด" },
-            { q: "ข้อดีของสถานีไฟฟ้าประเภทติดตั้งนอกอาคาร (Outdoor) คือข้อใด?", opts: ["ระบายความร้อนได้ดี ราคาถูก และขยายได้ง่าย", "ไม่ได้รับผลกระทบจากสภาพอากาศ", "ใช้พื้นที่ในการติดตั้งน้อยมาก", "ปลอดภัยจากสัตว์ 100%"], ans: 0, exp: "สถานีนอกอาคารมีพื้นที่ให้ระบายความร้อนได้ดี ค่าก่อสร้างและอุปกรณ์ถูกกว่าแบบในอาคาร และมีพื้นที่ขยายระบบได้ง่าย" },
-            { q: "ข้อเสียของสถานีไฟฟ้าประเภทติดตั้งนอกอาคาร คือข้อใด?", opts: ["ต้องใช้อุปกรณ์ราคาแพงมาก", "ระบายความร้อนได้แย่", "ใช้พื้นที่มาก และได้รับผลกระทบจากสภาพอากาศง่าย", "ไม่สามารถขยายสถานีได้"], ans: 2, exp: "เนื่องจากใช้ฉนวนอากาศจึงต้องเว้นระยะห่างอุปกรณ์มาก (เปลืองพื้นที่) และเสี่ยงต่อฟ้าผ่า สัตว์ และสภาพอากาศ" },
-            { q: "เซอร์กิตเบรกเกอร์ชนิดอากาศใช้หลักการใดในการดับอาร์ก?", opts: ["ใช้น้ำมันดับอาร์ก", "ใช้แก๊ส SF6", "ใช้ความเป็นสุญญากาศ", "ยืดระยะทางอาร์กให้ยาวขึ้นแล้วใช้แผ่นกั้น (Arc chute) ตัดแบ่ง"], ans: 3, exp: "Air Circuit Breaker ใช้หลักการทำให้ระยะอาร์กยาวขึ้นและดันเข้าไปใน Arc chute เพื่อตัดและระบายความร้อน" },
-            { q: "เซอร์กิตเบรกเกอร์ชนิดอัดอากาศ (Air Blast) ใช้อะไรเป็นตัวดับอาร์ก?", opts: ["ลมอัดความดันสูง (Compressed air)", "อากาศที่ความดันปกติ", "น้ำมันไฮดรอลิก", "แก๊สไนโตรเจน"], ans: 0, exp: "ใช้ลมอัดที่มีความดันสูงเป่าอาร์กให้ขาดและดันความร้อนออกไปอย่างรวดเร็ว" },
-            { q: "เซอร์กิตเบรกเกอร์ชนิดสุญญากาศ (Vacuum) ใช้หลักการใดในการดับอาร์ก?", opts: ["ใช้ก๊าซเฉื่อย", "ความเป็นสุญญากาศ (ไม่มีตัวกลางให้อิเล็กตรอนวิ่ง)", "ใช้แรงดูดของสนามแม่เหล็ก", "ใช้อากาศอัด"], ans: 1, exp: "ในสุญญากาศจะไม่มีอนุภาคของก๊าซให้แตกตัวเป็นไอออน ทำให้อาร์กดับลงอย่างรวดเร็วเมื่อกระแสผ่านจุดศูนย์" },
-            { q: "เซอร์กิตเบรกเกอร์ชนิดแก๊สใช้หลักการใดในการดับอาร์ก?", opts: ["ความเป็นสุญญากาศ", "คุณสมบัติการเป็นฉนวนและการดับอาร์กที่ดีเยี่ยมของแก๊ส SF6", "ใช้ลมเป่าแก๊ส", "ใช้น้ำมันระบายความร้อน"], ans: 1, exp: "แก๊สซัลเฟอร์เฮกซะฟลูออไรด์ (SF6) มีคุณสมบัติดับอาร์กและเป็นฉนวนไฟฟ้าดีกว่าอากาศหลายเท่า" },
-            { q: "สถานีไฟฟ้าแรงสูงชนิด GIS นิยมติดตั้งใช้ในพื้นที่ใด?", opts: ["พื้นที่ป่าเขา", "พื้นที่ชนบทที่ดินราคาถูก", "พื้นที่จำกัด เช่น ในเมือง หรือในอาคาร", "พื้นที่ที่มีพายุบ่อย"], ans: 2, exp: "Gas Insulated Substation (GIS) มีขนาดกะทัดรัดมาก ประหยัดพื้นที่ได้ถึง 70-90% จึงเหมาะกับที่ดินราคาแพงในเมือง" },
-            { q: "ข้อจำกัดของสวิทช์ตัดตอนแรงสูง (Disconnecting switch) คือข้อใด?", opts: ["ราคาแพงเกินไป", "ไม่สามารถปลดหรือสับวงจรขณะมีโหลด (Load) ได้", "ตัดกระแสลัดวงจรได้ช้า", "มีอายุการใช้งานสั้น"], ans: 1, exp: "Disconnecting switch ไม่มีอุปกรณ์ดับอาร์กในตัว ต้องปลดตอนที่ไม่มีกระแสไหลในวงจร (No-load) เท่านั้น" },
-            { q: "ข้อเสียของสถานีไฟฟ้าแบบ GIS คืออะไร?", opts: ["ใช้พื้นที่มหาศาล", "เกิดอาร์กได้ง่ายมาก", "ราคาอุปกรณ์สูง และการตรวจสอบซ่อมบำรุงทำได้ยาก", "ไม่สามารถติดตั้งในอาคารได้"], ans: 2, exp: "ระบบ GIS มีเทคโนโลยีซับซ้อน อุปกรณ์ถูกปิดผนึกในท่อแก๊ส เมื่อรั่วหรือเสียจะซ่อมแซมได้ยากและมีค่าใช้จ่ายสูง" },
-
-            // --- ชุดที่ 2: การพยากรณ์ความต้องการไฟฟ้า (ดัดแปลงจากเติมคำ) ---
-            { q: "ความสำคัญของการพยากรณ์ความต้องการไฟฟ้าในระยะปานกลางและระยะยาว คืออะไร?", opts: ["เพื่อใช้คำนวณบิลค่าไฟฟ้าล่วงหน้า", "เพื่อเป็นข้อมูลในการวางแผนขยายกำลังผลิต ระบบส่ง และระบบจำหน่าย", "เพื่อลดปัญหากระแสไฟรั่วลงดิน", "เพื่อคำนวณภาษีพลังงาน"], ans: 1, exp: "การพยากรณ์ระยะยาวมีความจำเป็นเพื่อการเตรียมพร้อมโครงสร้างพื้นฐานล่วงหน้า ป้องกันไฟฟ้าไม่เพียงพอ" },
-            { q: "การพยากรณ์ความต้องการไฟฟ้าจะพยากรณ์ค่าทางไฟฟ้าใดเป็นหลัก?", opts: ["แรงดันตก และ แรงดันเกิน", "พลังไฟฟ้าสูงสุด (Peak Demand) และ พลังงานไฟฟ้า (Energy Demand)", "ค่าความต้านทาน และ กระแสลัดวงจร", "ค่า Load factor และ Demand factor"], ans: 1, exp: "ต้องพยากรณ์ทั้งปริมาณกำลังไฟฟ้าสูงสุดที่ต้องการ (Peak) และปริมาณพลังงานรวมที่ต้องผลิต (Energy)" },
-            { q: "ค่าความต้องการไฟฟ้ามีหน่วยวัดเป็นอะไร?", opts: ["โวลต์ (V) และ แอมแปร์ (A)", "โอห์ม (Ohm) และ ฟารัด (F)", "MW (เมกะวัตต์) หรือ GWh / kWh", "kV (กิโลโวลต์)"], ans: 2, exp: "Peak Demand วัดเป็น kW หรือ MW ส่วน Energy Demand วัดเป็นหน่วยปริมาณไฟฟ้าเช่น kWh หรือ GWh" },
-            { q: "การพยากรณ์ 'พลังงานไฟฟ้าสูงสุด' นำไปสู่สิ่งใด และการพยากรณ์ 'ค่าความต้องการพลังงานไฟฟ้า' นำไปสู่สิ่งใด?", opts: ["นำไปสู่วางแผนก่อสร้างโรงไฟฟ้า/ระบบส่ง และ นำไปสู่การจัดหาเชื้อเพลิง", "นำไปสู่การหาจุดลัดวงจร และ นำไปสู่การติดเบรกเกอร์", "นำไปสู่การหา Loss และ นำไปสู่การหา Efficiency", "นำไปสู่การตั้งราคาค่าไฟ และ นำไปสู่การจัดเก็บภาษี"], ans: 0, exp: "Peak Demand เอาไว้สร้างโรงไฟฟ้าให้พอรับช่วงพีค ส่วน Energy Demand เอาไว้คำนวณสต็อกเชื้อเพลิงที่ต้องใช้เผา" },
-            { q: "ปัจจุบันกำลังการผลิตไฟฟ้าที่ใช้ในประเทศไทยได้จากโรงงานประเภทใดมากที่สุด?", opts: ["พลังน้ำ", "พลังความร้อนร่วม (Combined Cycle)", "ดีเซล", "พลังงานลมนอกชายฝั่ง"], ans: 1, exp: "จากข้อมูลโครงสร้าง กฟผ. โรงไฟฟ้าพลังความร้อนร่วมมีสัดส่วนกำลังผลิตสูงสุดในระบบ" },
-            { q: "ในภาคส่วนใด จะมีความต้องการพลังงานไฟฟ้ามากที่สุด?", opts: ["บ้านอยู่อาศัย", "ธุรกิจเฉพาะอย่าง และ กิจการขนาดใหญ่", "ส่วนราชการ", "สูบน้ำเพื่อการเกษตร"], ans: 1, exp: "ภาคอุตสาหกรรมและธุรกิจขนาดใหญ่เป็นภาคส่วนที่ใช้พลังงานไฟฟ้ารวมกันมากที่สุด (กว่า 70-80%)" },
-            { q: "แบบจำลองการพยากรณ์ที่นิยมใช้และให้ค่าแม่นยำรองรับการเปลี่ยนแปลงผู้ใช้หน่วยสุดท้าย คือแบบใด?", opts: ["Time Series Model", "Top-down Model", "End-use model (แบบจำลองผู้ใช้ไฟฟ้าหน่วยสุดท้าย / Bottom-up)", "Linear Regression"], ans: 2, exp: "End-use model หรือ Bottom-up เป็นแบบจำลองที่ลงลึกถึงประเภทที่อยู่อาศัยและการถือครองเครื่องใช้ไฟฟ้า" },
-            { q: "วิธีการใดคือวิธีการพยากรณ์ 'ค่าพลังงานไฟฟ้าสูงสุด' ได้ถูกต้องที่สุด?", opts: ["หาค่าเฉลี่ยตลอด 24 ชั่วโมง", "นำลักษณะการใช้ไฟฟ้า (Load Profile) ของทุกกลุ่มมารวมกัน", "หาจากโหลดของบ้านอยู่อาศัยเพียงอย่างเดียว", "เดาจากตัวเลขการผลิตปีที่แล้ว"], ans: 1, exp: "หลังจากได้พลังงานไฟฟ้า ต้องนำ Load Profile (กราฟลักษณะการใช้ไฟ) ของทุกกลุ่มมาซ้อนทับกันเพื่อหาจุด Peak ที่เวลาเดียวกัน" },
-            { q: "ในปัจจุบันสัดส่วนการใช้เชื้อเพลิงใด ผลิตพลังงานไฟฟ้าของ กฟผ. มากที่สุด?", opts: ["ถ่านหินลิกไนต์", "น้ำมันเตา", "ก๊าซธรรมชาติ", "พลังงานน้ำ"], ans: 2, exp: "ก๊าซธรรมชาติเป็นเชื้อเพลิงหลักในการผลิตไฟฟ้าของไทย (มีสัดส่วนสูงกว่า 70%)" },
-            { q: "ตามแผน PDP 2558-2579 โรงไฟฟ้าประเภทใดจะมีสัดส่วนการผลิตกำลังไฟฟ้าเพิ่มขึ้นมามาก?", opts: ["นิวเคลียร์", "โรงไฟฟ้าพลังงานหมุนเวียน และ ความร้อนร่วม", "ดีเซล", "ถ่านหิน"], ans: 1, exp: "แผน PDP มุ่งเน้นไปที่พลังงานหมุนเวียนที่เพิ่มขึ้นมากถึงหลักหมื่นเมกะวัตต์ และพลังความร้อนร่วม" },
-
-            // --- ชุดที่ 3: แบบปรนัยกากบาท (Fault และ Power Quality) ---
-            { q: "ข้อใดกล่าวถึงประโยชน์ของการศึกษาเรื่องฟอลต์หรือการลัดวงจรของสายส่งได้ถูกต้องที่สุด?", opts: ["ใช้ในการหาค่าความสูญเสียในสายส่ง", "ทำให้ทราบถึงความต้องการใช้ไฟฟ้าที่แท้จริง", "ใช้ในการควบคุมและวางแผนระบบในอนาคต", "ใช้หาขนาดอุปกรณ์ป้องกันและรูปแบบของการป้องกัน"], ans: 3, exp: "เป้าหมายหลักคือรู้ค่ากระแสลัดวงจร เพื่อนำไปเลือกขนาดเบรกเกอร์ ฟิวส์ และรีเลย์ให้ตัดวงจรได้ปลอดภัย" },
-            { q: "ข้อใดเป็นสาเหตุที่ทำให้เกิดฟอลต์ในระบบมากที่สุด?", opts: ["ปัญหาไฟฟ้าดับที่เกิดจากการกระทำของคน", "สภาพอากาศและสิ่งแวดล้อม", "เหตุขัดข้องทางด้านเทคนิค", "เกิดจากสัตว์ต่างๆ"], ans: 1, exp: "พายุ ฟ้าผ่า ต้นไม้ล้ม และสภาพอากาศเป็นตัวการหลักที่ก่อให้เกิดฟอลต์ในสายส่งแบบเปิด (Overhead)" },
-            { q: "การเกิดฟอลต์ในข้อใดเมื่อเกิดขึ้นแล้วจะเป็นฟอลต์ที่มีความรุนแรงมากที่สุด?", opts: ["Line to Line fault", "Three phase fault", "Single line to ground fault", "Double line to ground fault"], ans: 1, exp: "ลัดวงจร 3 เฟส (Three phase fault) กระแสจะไหลสูงสุดและสร้างความเสียหายต่อโครงสร้างระบบมากที่สุด" },
-            { q: "การเกิดฟอลต์ในระบบไฟฟ้าในข้อใดเกิดบ่อยที่สุด?", opts: ["Three phase fault", "Single line to ground fault", "Double line to line fault", "Double line to ground fault"], ans: 1, exp: "Line to ground (เส้นเดียวลงดิน) เกิดบ่อยสุด เช่น กิ่งไม้แตะสายไฟเส้นเดียว หรือลูกถ้วยแตกเฟสเดียว" },
-            { q: "ข้อใด ไม่ใช่ วิธีป้องกันการเกิดฟอลต์ในระบบไฟฟ้า?", opts: ["การติดตั้งอุปกรณ์ป้องกันเพิ่มขึ้นในระบบ", "เพิ่มประสิทธิภาพของระบบสายส่ง", "เพิ่มขนาดกระแสของอุปกรณ์ป้องกันให้สูงขึ้น", "เพิ่มการตรวจเช็คสภาพของฉนวนในระบบ"], ans: 2, exp: "การเพิ่มขนาดกระแสของอุปกรณ์ป้องกัน (Overrating) ไม่ได้ป้องกันฟอลต์ และอาจทำให้อุปกรณ์พังก่อนที่เบรกเกอร์จะทริป" },
-            { q: "Voltage sag มีความหมายตรงกับข้อใด?", opts: ["ปัญหาจากไฟดับชั่วระยะเวลาสั้น", "ปัญหาจากแรงดันตกชั่วระยะสั้น", "ปัญหาจากแรงดันเกินชั่วระยะสั้น", "การเปลี่ยนแปลงแรงดันช่วงระยะสั้น"], ans: 1, exp: "Voltage Sag คือแรงดันตกชั่วขณะ ขนาดลดลงเหลือ 0.1-0.9 pu ในช่วงสั้นๆ (มักเกิดจาก Fault หรือ Start มอเตอร์)" },
-            { q: "ข้อใดคือ ไฟดับช่วงสั้น?", opts: ["Voltage Interruption", "Voltage swell", "Voltage sag", "Voltage dip"], ans: 0, exp: "Voltage Interruption คือแรงดันลดลงต่ำกว่า 0.1 pu เป็นช่วงเวลาสั้นๆ (10 ms - 1 min)" },
-            { q: "ข้อใดกล่าวถึง การเกิดออสซิเลต (Oscillatory transient) ได้ถูกต้องที่สุด?", opts: ["ลักษณะของแรงดันหรือกระแสมีค่าสูง เกิดขึ้นทันทีทันใด มีความถี่เปลี่ยนแปลง", "ขนาดกระแสมีความชันสูงมาก เกิดขึ้นทันทีทันใด ไม่มีความถี่เปลี่ยนแปลง", "ลักษณะของแรงดันมีค่าต่ำ เกิดขึ้นทันทีทันใด มีความถี่เปลี่ยนแปลง", "ลักษณะของแรงดันกระแสมีค่าสูง เกิดขึ้นทันทีทันใด ไม่มีความถี่เปลี่ยนแปลง (มีการเปลี่ยนขั้ว)"], ans: 3, exp: "ตามเอกสาร Oscillatory Transient คือแรงดัน/กระแสสูง ทันทีทันใด ไม่มีความถี่เปลี่ยนแปลง(ในนิยามต้นฉบับ) แต่มักเปลี่ยนขั้วไปมาอย่างรวดเร็วเกิดจากการ Switching" },
-            { q: "ข้อใดเป็นสาเหตุทำให้แรงดันไฟฟ้าตก?", opts: ["เกิดจากความไม่สมดุลขนาดของโหลดแต่ละเฟส", "ผลจากการเกิดฮาร์มอนิกส์ขึ้นในระบบ", "ความถี่ของระบบไฟฟ้ามีค่าลดลง", "การสวิตชิ่งโหลดขนาดใหญ่เข้าระบบ"], ans: 3, exp: "การสับสวิตช์ดึงโหลดใหญ่ๆ (เช่น มอเตอร์) เข้าระบบ จะดึงกระแสกระชาก ทำให้แรงดันในสายตกชั่วขณะ" },
-            { q: "ข้อใดกล่าวถึง ฮาร์มอนิกส์ (Harmonic) ได้ถูกต้องที่สุด?", opts: ["เกิดจากโหลดประเภทมอเตอร์อินดักชั่น", "เกิดจากอุปกรณ์ป้องกันมีการตัดวงจรบ่อยครั้ง", "เกิดจากผลของการใช้งานอุปกรณ์ประเภทอิเล็กทรอนิกส์กำลัง", "สาเหตุเกิดจากการสวิงของอุปกรณ์ในระบบ"], ans: 2, exp: "ฮาร์มอนิกส์เกิดจากโหลดแบบ Non-linear เช่น วงจรเรียงกระแส อินเวอร์เตอร์ และอุปกรณ์อิเล็กทรอนิกส์กำลัง" }
-        ];
-
-        // ---------------------------------------------------------
-        // 2. ฐานข้อมูลข้อสอบ AI (จำลองให้ครบ 400 ข้อจากทฤษฎีบท 6-9)
-        // ---------------------------------------------------------
-        const aiBaseData = [
-            { q: "โหลดกราฟ (Load Curve) ที่มีความผันผวนสูง (Peak สูง แต่ Base ต่ำ) มักเป็นลักษณะของผู้ใช้ไฟประเภทใด?", opts: ["โรงงานอุตสาหกรรมขนาดใหญ่ (เดินเครื่อง 24 ชม.)", "บ้านพักอาศัย (มีช่วง Peak เช้าและค่ำ)", "ไฟส่องสว่างถนนสาธารณะ", "ส่วนราชการ"], ans: 1, exp: "บ้านพักอาศัยจะมีการใช้ไฟกระจุกตัวตอนเช้าและค่ำ ทำให้กราฟแกว่งและ Load Factor ต่ำ" },
-            { q: "การหาค่าความต้องการกำลังไฟฟ้าเฉลี่ย (Demand) สัมพันธ์กับตัวแปรใดมากที่สุด?", opts: ["แรงดัน x กระแส", "พลังงานที่ใช้ (kWh) / เวลา (hr)", "ผลรวมโหลดติดตั้งทั้งหมด", "ไดเวอร์ซิตี้แฟกเตอร์"], ans: 1, exp: "Demand = Energy (kWh) หารด้วย เวลา (hr) ในช่วงคาบเวลานั้นๆ" },
-            { q: "ไดเวอร์ซิตี้แฟกเตอร์ (Diversity factor) มีค่าเท่ากับข้อใด?", opts: ["ผลรวมโหลดสูงสุดแต่ละกลุ่ม / โหลดรวมสูงสุดของระบบ", "โหลดเฉลี่ย / โหลดสูงสุด", "โหลดสูงสุด / โหลดติดตั้งทั้งหมด", "1 / Load Factor"], ans: 0, exp: "Diversity factor = Sum(Pmax_i) / Pmax_system ซึ่งค่านี้จะมีค่ามากกว่า 1 เสมอ" },
-            { q: "มาตรฐานแรงดันอิมพัลส์ฟ้าผ่ามาตรฐาน (Standard lightning impulse) มีลักษณะรูปคลื่นอย่างไร?", opts: ["250 / 2500 µs", "1.2 / 50 µs", "10 / 350 µs", "8 / 20 µs"], ans: 1, exp: "คลื่นฟ้าผ่ามาตรฐานตาม IEC มีเวลาหน้าคลื่น 1.2 µs และเวลาหางคลื่น (ลดลงครึ่งหนึ่ง) ที่ 50 µs" },
-            { q: "BIL (Basic Impulse Insulation Level) คืออะไร?", opts: ["ระดับกระแสลัดวงจรสูงสุดที่อุปกรณ์ทนได้", "ระดับแรงดันตกชั่วขณะที่ยอมรับได้", "ค่าความคงทนของฉนวนต่อแรงดันอิมพัลส์รูปคลื่นฟ้าผ่า", "ค่าพลังงานไฟฟ้าสูญเสียในสายส่ง"], ans: 2, exp: "BIL เป็นค่าพิกัดการทนทานของอุปกรณ์ต่อแรงดันกระชาก (Surge/Lightning) หากเกินค่านี้ฉนวนอาจทะลุ (Puncture) หรือวาบไฟ (Flashover)" },
-            { q: "ข้อใดคือการจัดความสัมพันธ์ของการฉนวน (Insulation Coordination) ที่ถูกต้อง?", opts: ["ทำให้ฉนวนทุกตัวทนแรงดันฟ้าผ่าได้แบบ Infinity", "ใช้ฉนวนแบบของเหลวแทนก๊าซทั้งหมด", "เลือกระดับฉนวนอุปกรณ์ให้สัมพันธ์กับอุปกรณ์ป้องกัน (เช่น Surge Arrester) เพื่อความปลอดภัยและประหยัด", "ลดแรงดันของระบบส่งให้ต่ำลงเพื่อไม่ต้องใช้ฉนวน"], ans: 2, exp: "เป้าหมายคือเชิงเศรษฐศาสตร์และวิศวกรรม โดยให้จุดอ่อนไปอยู่ที่อุปกรณ์ป้องกันราคาถูก (Arrester) เพื่อปกป้องหม้อแปลงราคาแพง" },
-            { q: "ปรากฏการณ์ออสซิเลตชั่วครู่ (Oscillatory transient) มักมีสาเหตุหลักจากอะไร?", opts: ["ฟ้าผ่าลงสายส่งโดยตรง (Direct Strike)", "การสวิตชิ่ง (Switching) ของอุปกรณ์ในระบบ เช่น สับคาปาซิเตอร์", "กิ่งไม้แตะสายไฟลัดวงจรลงดิน", "โหลดมอเตอร์ทำงานเกินกำลัง"], ans: 1, exp: "Oscillatory Transient เกิดจากการเปิด-ปิดวงจร (Switching) ที่มี L และ C ทำให้เกิดความถี่แกว่งตัวรวดเร็ว" },
-            { q: "องค์ประกอบไฟตรง (DC offset) ในรูปคลื่นกระแสสลับ ส่งผลเสียอย่างไร?", opts: ["ทำให้เกิดความร้อนและกำลังสูญเสียในหม้อแปลง", "ช่วยลดฮาร์มอนิกส์ในระบบ", "ทำให้ความถี่ระบบแกว่งเกิน 60Hz", "ทำให้เกิดไฟดับทันที"], ans: 0, exp: "DC Offset (จากการเรียงกระแสแบบครึ่งคลื่น) ทำให้แกนเหล็กหม้อแปลงอิ่มตัว (Saturation) เกิดความร้อนสูง" }
-        ];
-
-        // สร้างข้อมูลชุดใหญ่ให้ครบ 400 ข้อโดยดึงจาก aiBaseData วนลูป (เพื่อจำลองระบบ 400 ข้อ)
-        const aiData = [];
-        for (let i = 0; i < 400; i++) {
-            let template = aiBaseData[i % aiBaseData.length];
-            aiData.push({
-                q: `[ข้อ ${i + 1}] ${template.q}`,
-                opts: template.opts,
-                ans: template.ans,
-                exp: template.exp
-            });
-        }
-
-        // ---------------------------------------------------------
-        // State Management 
-        // ---------------------------------------------------------
-        let currentMode = '';
         let currentQuestions = [];
         let currentIdx = 0;
         let score = 0;
@@ -233,16 +227,15 @@
         }
 
         function startQuiz(mode) {
-            currentMode = mode;
             score = 0;
             currentIdx = 0;
             
             if(mode === 'ai') {
-                currentQuestions = aiData;
-                document.getElementById('quiz-title').innerText = "โหมดข้อสอบ AI (400 ข้อ)";
+                currentQuestions = aiData; // 400 ข้อจาก questions.js
+                document.getElementById('quiz-title').innerText = "🧠 โหมดข้อสอบ AI (400 ข้อเต็ม)";
             } else {
-                currentQuestions = profData;
-                document.getElementById('quiz-title').innerText = "โหมดข้อสอบเก่าอาจารย์ (กากบาท & เติมคำ)";
+                currentQuestions = profData; // 30 ข้อจาก questions.js
+                document.getElementById('quiz-title').innerText = "📝 โหมดข้อสอบเก่าอาจารย์ (30 ข้อตรงเป๊ะ)";
             }
 
             document.getElementById('main-menu').classList.add('hidden');
@@ -264,8 +257,9 @@
             let optsHtml = '';
             q.opts.forEach((opt, idx) => {
                 let label = ['ก.', 'ข.', 'ค.', 'ง.'][idx];
-                optsHtml += `<button onclick="selectOption(${idx})" class="w-full text-left p-4 rounded-xl bg-slate-800/80 border border-slate-700 hover:border-sky-500 hover:bg-sky-900/50 transition-all text-slate-200 option-btn flex">
-                    <span class="font-bold text-sky-400 mr-3">${label}</span> <span>${opt}</span>
+                optsHtml += `<button onclick="selectOption(${idx})" class="w-full text-left p-4 rounded-xl bg-slate-800/80 border border-slate-700/80 hover:border-sky-400 hover:bg-sky-950/40 transition-all text-slate-200 option-btn flex items-center shadow-md">
+                    <span class="font-bold text-sky-400 mr-4 bg-sky-950/60 px-3 py-1 rounded-lg border border-sky-800/50">${label}</span> 
+                    <span class="text-sm md:text-base">${opt}</span>
                 </button>`;
             });
 
@@ -279,17 +273,15 @@
             let buttons = document.querySelectorAll('.option-btn');
             
             buttons.forEach((btn, idx) => {
-                btn.disabled = true; // ป้องกันการกดซ้ำ
-                btn.classList.remove('hover:border-sky-500', 'hover:bg-sky-900/50');
+                btn.disabled = true;
+                btn.classList.remove('hover:border-sky-400', 'hover:bg-sky-950/40');
                 
                 if (idx === q.ans) {
-                    // ข้อที่ถูก
-                    btn.classList.add('bg-emerald-900/60', 'border-emerald-500', 'text-emerald-100');
+                    btn.classList.add('bg-emerald-950/80', 'border-emerald-500', 'text-emerald-200', 'shadow-[0_0_15px_rgba(16,185,129,0.3)]');
                 } else if (idx === selectedIdx) {
-                    // ข้อที่เลือกผิด
-                    btn.classList.add('bg-rose-900/60', 'border-rose-500', 'text-rose-100');
+                    btn.classList.add('bg-rose-950/80', 'border-rose-500', 'text-rose-200');
                 } else {
-                    btn.classList.add('opacity-50');
+                    btn.classList.add('opacity-40');
                 }
             });
 
@@ -308,10 +300,11 @@
 
         function showResult() {
             let pct = (score / currentQuestions.length) * 100;
-            document.getElementById('question-text').innerHTML = `<div class="text-center py-10">
-                <div class="text-6xl mb-4">🏆</div>
-                <h2 class="text-3xl font-bold text-sky-400 mb-2">ทำแบบทดสอบเสร็จสิ้น!</h2>
-                <p class="text-xl text-slate-300">คุณได้คะแนน ${score} / ${currentQuestions.length} (${pct.toFixed(0)}%)</p>
+            document.getElementById('question-text').innerHTML = `<div class="text-center py-12">
+                <div class="text-7xl mb-4 animate-bounce">🎉</div>
+                <h2 class="text-3xl font-extrabold text-sky-400 mb-3">สุดยอดไปเลย! ทำแบบทดสอบครบแล้ว</h2>
+                <p class="text-xl text-slate-300 mb-2">คุณทำคะแนนได้ <span class="text-emerald-400 font-bold">${score}</span> / ${currentQuestions.length}</p>
+                <p class="text-sm text-slate-400">คิดเป็นเปอร์เซ็นต์ความสำเร็จ: <span class="text-sky-300 font-bold">${pct.toFixed(1)}%</span></p>
             </div>`;
             document.getElementById('options-container').innerHTML = '';
             document.getElementById('explanation-box').classList.add('hidden');
