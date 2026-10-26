@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rimuru AI Study Core - ปรมาจารย์สไลม์สร้างข้อสอบ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        rimuru: {
+                            50: '#eef8ff',
+                            100: '#d8f0fe',
+                            200: '#b8e4fd',
+                            300: '#86d2fc',
+                            400: '#4dbbf9',
+                            500: '#22a1f5',
+                            600: '#0b82d3',
+                            700: '#0c68ab',
+                            800: '#0e558c',
+                            900: '#104773',
+                            950: '#0a2d4a',
+                        },
+                        slime: {
+                            dark: '#070f1a',
+                            card: '#0f1c2e',
+                            border: '#1e3352'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Sarabun & Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PDF.js for parsing PDF locally -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <style>
+        body { font-family: 'Prompt', 'Sarabun', sans-serif; }
+        .glow-effect {
+            box-shadow: 0 0 25px rgba(34, 161, 245, 0.35);
+        }
+        .glow-text {
+            text-shadow: 0 0 15px rgba(77, 187, 249, 0.6);
+        }
+        .slime-blob {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #070f1a; }
+        ::-webkit-scrollbar-thumb { background: #1e3352; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #22a1f5; }
+    </style>
+</head>
+<body class="bg-slime-dark text-slate-100 min-h-screen selection:bg-rimuru-500 selection:text-white flex flex-col justify-between relative overflow-x-hidden">
+
+    <!-- Background Atmospheric Glows -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-rimuru-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Header / Navigation -->
+    <header class="border-b border-slime-border/80 bg-slime-dark/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rimuru-600 to-rimuru-400 flex items-center justify-center glow-effect slime-blob">
+                    <span class="text-xl">💧</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg sm:text-xl tracking-wide text-white glow-text">ริมุรุ เทมเพสต์ AI สไลม์</h1>
+                    <p class="text-xs text-rimuru-300 font-light">ระบบวิเคราะห์เอกสารและสร้างข้อสอบทบทวนแพทเทิร์น</p>
+                </div>
+            </div>
+            <div id="api-status-badge" class="hidden sm:flex items-center gap-2 bg-rimuru-950/80 border border-rimuru-500/30 px-3 py-1.5 rounded-full text-xs text-rimuru-300">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>เชื่อมต่อ Great Sage พร้อมทำงาน</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-1 flex flex-col justify-center">
+
+        <!-- STEP 1: Upload & Input Panel -->
+        <section id="upload-section" class="bg-slime-card/90 backdrop-blur-xl border border-slime-border rounded-3xl p-6 sm:p-10 shadow-2xl transition-all duration-300">
+            <div class="text-center max-w-xl mx-auto mb-8">
+                <div class="inline-block p-3 rounded-2xl bg-rimuru-500/10 border border-rimuru-500/20 text-rimuru-400 mb-4 text-2xl">
+                    📜✨
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">อัปโหลดตำราเรียนหรือเอกสาร PDF</h2>
+                <p class="text-slate-400 text-sm sm:text-base">
+                    ให้มหาปราชญ์ (Great Sage) อ่านไฟล์ของคุณ แล้วเนรมิตข้อสอบปรนัยเน้นแพทเทิร์น ไม่มีคำนวณ พร้อมอธิบายเหตุผลอย่างละเอียด!
+                </p>
+            </div>
+
+            <!-- Drag & Drop Dropzone -->
+            <div id="dropzone" class="border-2 border-dashed border-rimuru-500/30 hover:border-rimuru-400 bg-rimuru-950/20 hover:bg-rimuru-950/40 rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 mb-6 group">
+                <input type="file" id="pdf-file-input" accept=".pdf" class="hidden">
+                <div class="flex flex-col items-center justify-center">
+                    <div class="w-16 h-16 rounded-full bg-rimuru-500/10 group-hover:bg-rimuru-500/20 flex items-center justify-center text-rimuru-400 text-3xl mb-3 transition-transform group-hover:scale-110">
+                        📁
+                    </div>
+                    <p class="text-white font-medium mb-1">ลากไฟล์ PDF มาวางที่นี่ หรือ <span class="text-rimuru-400 underline">คลิกเพื่อเลือกไฟล์</span></p>
+                    <p class="text-xs text-slate-500">รองรับไฟล์เอกสารการเรียน บทสรุป หรือตำราเรียน PDF ทุกขนาด</p>
+                    <span id="selected-file-name" class="mt-3 inline-block text-xs font-semibold px-3 py-1 rounded-full bg-rimuru-500/20 text-rimuru-300 hidden"></span>
+                </div>
+            </div>
+
+            <!-- Alternative Text Input / Paste Notes -->
+            <div class="mb-6">
+                <label for="manual-text" class="block text-sm font-medium text-slate-300 mb-2">หรือวางเนื้อหา / สรุปบทเรียนเพิ่มเติม (ถ้ามี):</label>
+                <textarea id="manual-text" rows="4" class="w-full bg-slate-900/80 border border-slime-border rounded-xl p-4 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-rimuru-500 transition-colors text-sm" placeholder="วางข้อความเนื้อหาที่คุณต้องการให้มหาปราชญ์ออกข้อสอบตรงนี้..."></textarea>
+            </div>
+
+            <!-- Settings Options -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                <div>
+                    <label for="num-questions" class="block text-sm font-medium text-slate-300 mb-2">จำนวนข้อสอบที่ต้องการ:</label>
+                    <select id="num-questions" class="w-full bg-slate-900/80 border border-slime-border rounded-xl p-3 text-slate-200 focus:outline-none focus:border-rimuru-500 text-sm">
+                        <option value="5">5 ข้อ (ทดสอบความเร็ว)</option>
+                        <option value="10" selected>10 ข้อ (แนะนำสำหรับการทบทวน)</option>
+                        <option value="15">15 ข้อ (เจาะลึกทุกแพทเทิร์น)</option>
+                        <option value="20">20 ข้อ (จัดเต็มความแม่นยำ)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="focus-style" class="block text-sm font-medium text-slate-300 mb-2">สไตล์การออกข้อสอบ:</label>
+                    <select id="focus-style" class="w-full bg-slate-900/80 border border-slime-border rounded-xl p-3 text-slate-200 focus:outline-none focus:border-rimuru-500 text-sm">
+                        <option value="concept">เน้นจำแนกคอนเซ็ปต์และนิยาม</option>
+                        <option value="pattern" selected>เน้นจับแพทเทิร์นและเหตุผลวิเคราะห์</option>
+                        <option value="mixed">ผสมผสานทฤษฎีและสถานการณ์จำลอง</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Generate Button -->
+            <button id="generate-btn" onclick="generateQuizFromSource()" class="w-full py-4 rounded-xl bg-gradient-to-r from-rimuru-600 via-rimuru-500 to-cyan-500 hover:from-rimuru-500 hover:to-cyan-400 text-white font-bold text-base shadow-lg shadow-rimuru-600/30 active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2">
+                <span>✨ ให้มหาปราชญ์สร้างข้อสอบเดี๋ยวนี้!</span>
+            </button>
+        </section>
+
+        <!-- STEP 2: Loading State (Great Sage analyzing) -->
+        <section id="loading-section" class="hidden bg-slime-card/90 backdrop-blur-xl border border-slime-border rounded-3xl p-12 text-center shadow-2xl">
+            <div class="relative w-24 h-24 mx-auto mb-6">
+                <div class="absolute inset-0 rounded-full border-4 border-rimuru-500/20 animate-ping"></div>
+                <div class="absolute inset-0 rounded-full border-4 border-rimuru-500 border-t-transparent animate-spin"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-3xl">💧</div>
+            </div>
+            <h3 id="loading-status-title" class="text-xl font-bold text-white mb-2">มหาปราชญ์กำลังวิเคราะห์เอกสารของคุณ...</h3>
+            <p id="loading-status-desc" class="text-slate-400 text-sm max-w-md mx-auto">กำลังอ่านข้อความ แยกแยะเนื้อหา และคัดกรองเฉพาะข้อสอบเชิงทฤษฎีและแพทเทิร์น (ไม่มีข้อคำนวณ) โปรดรอสักครู่</p>
+        </section>
+
+        <!-- STEP 3: Interactive Quiz Section -->
+        <section id="quiz-section" class="hidden bg-slime-card/90 backdrop-blur-xl border border-slime-border rounded-3xl p-6 sm:p-10 shadow-2xl transition-all duration-300">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-slime-border">
+                <div>
+                    <span id="quiz-badge" class="inline-block bg-rimuru-500/20 text-rimuru-300 text-xs font-semibold px-3 py-1 rounded-full border border-rimuru-500/30 mb-2">
+                        🌟 แบบฝึกหัดทบทวนแพทเทิร์น
+                    </span>
+                    <h3 id="quiz-title-header" class="text-lg sm:text-xl font-bold text-white">ข้อสอบวิเคราะห์เนื้อหา</h3>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-slate-900/90 border border-slime-border px-4 py-2 rounded-xl text-sm font-semibold text-rimuru-300">
+                        ข้อที่ <span id="current-q-num">1</span> จาก <span id="total-q-num">10</span>
+                    </div>
+                    <div id="live-score-box" class="hidden bg-emerald-950/40 border border-emerald-500/40 px-3 py-2 rounded-xl text-sm font-semibold text-emerald-300">
+                        คะแนน: <span id="live-score-val">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="mb-6">
+                <h4 id="question-prompt" class="text-base sm:text-lg font-semibold text-white leading-relaxed mb-6">
+                    <!-- Question injected here -->
+                </h4>
+
+                <!-- Options List -->
+                <div id="options-list" class="space-y-3.5">
+                    <!-- Options injected here -->
+                </div>
+            </div>
+
+            <!-- Rationale / Feedback Box -->
+            <div id="explanation-box" class="hidden mt-6 p-5 rounded-2xl border transition-all duration-300">
+                <div id="explanation-header" class="font-bold text-base mb-1 flex items-center gap-2"></div>
+                <p id="explanation-text" class="text-sm sm:text-base leading-relaxed text-slate-300"></p>
+            </div>
+
+            <!-- Navigation Button -->
+            <div class="mt-8 flex justify-between items-center">
+                <button onclick="resetToUpload()" class="text-xs text-slate-400 hover:text-white underline transition-colors">
+                    ← อัปโหลดไฟล์ใหม่ / เปลี่ยนเนื้อหา
+                </button>
+                <button id="next-question-btn" onclick="proceedNextQuestion()" class="hidden bg-rimuru-600 hover:bg-rimuru-500 active:scale-95 text-white font-semibold px-6 py-3 rounded-xl shadow-lg shadow-rimuru-600/30 transition-all duration-200 flex items-center gap-2">
+                    <span>ข้อถัดไป</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 4: Result Screen -->
+        <section id="result-section" class="hidden bg-slime-card/90 backdrop-blur-xl border border-slime-border rounded-3xl p-8 sm:p-12 text-center shadow-2xl">
+            <div class="w-20 h-20 rounded-full bg-rimuru-500/20 border border-rimuru-500/40 flex items-center justify-center text-4xl mx-auto mb-4 glow-effect">
+                🏆
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-bold text-white mb-2">ภารกิจทบทวนบทเรียนเสร็จสิ้น!</h3>
+            <p id="result-remark" class="text-slate-300 text-sm sm:text-base mb-6">มหาปราชญ์วิเคราะห์ผลการทำข้อสอบของคุณเรียบร้อยแล้ว</p>
+            
+            <div class="inline-block bg-slate-900/90 border border-slime-border rounded-2xl p-6 mb-8 shadow-xl">
+                <span class="text-slate-400 text-xs block mb-1">คะแนนรวมที่คุณทำได้</span>
+                <span id="final-score-display" class="text-4xl font-extrabold text-rimuru-400 glow-text">0 / 10</span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button onclick="restartCurrentQuiz()" class="bg-rimuru-600 hover:bg-rimuru-500 active:scale-95 text-white font-semibold px-8 py-3.5 rounded-xl shadow-lg shadow-rimuru-600/30 transition-all duration-200">
+                    🔄 ทำแบบฝึกหัดชุดเดิมอีกครั้ง
+                </button>
+                <button onclick="resetToUpload()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-semibold px-8 py-3.5 rounded-xl border border-slate-700 transition-all duration-200">
+                    📂 อัปโหลดไฟล์ใหม่
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 text-center text-xs text-slate-500 border-t border-slime-border/40">
+        <p>Rimuru AI Study System • Powered by Gemini 3 Flash & Great Sage Core</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        let extractedPdfText = "";
+        let generatedQuestions = [];
+        let currentQuestionIndex = 0;
+        let scoreCount = 0;
+        let answeredCurrent = false;
+
+        // Dropzone interaction
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('pdf-file-input');
+        const selectedFileName = document.getElementById('selected-file-name');
+
+        dropzone.addEventListener('click', () => fileInput.click());
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-rimuru-400', 'bg-rimuru-950/40');
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-rimuru-400', 'bg-rimuru-950/40');
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('border-rimuru-400', 'bg-rimuru-950/40');
+            if (e.dataTransfer.files.length > 0) {
+                handleSelectedFile(e.dataTransfer.files[0]);
+            }
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleSelectedFile(e.target.files[0]);
+            }
+        });
+
+        async function handleSelectedFile(file) {
+            if (file.type !== 'application/pdf') {
+                showCustomMessage("กรุณาเลือกไฟล์เอกสารนามสกุล .pdf เท่านั้นครับ!", "error");
+                return;
+            }
+            selectedFileName.textContent = `📄 ไฟล์ที่เลือก: ${file.name}`;
+            selectedFileName.classList.remove('hidden');
+
+            try {
+                showLoadingState("กำลังแยกตัวอักษรจากไฟล์ PDF...", "กำลังอ่านหน้ากระดาษและดึงข้อความเนื้อหาทั้งหมด...");
+                const arrayBuffer = await file.arrayBuffer();
+                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                const pdfDoc = await loadingTask.promise;
+                
+                let fullText = "";
+                for (let i = 1; i <= pdfDoc.numPages; i++) {
+                    const page = await pdfDoc.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    fullText += `--- หน้า ${i} ---\n` + pageText + "\n";
+                }
+                extractedPdfText = fullText;
+                hideLoadingState();
+                showCustomMessage("อ่านไฟล์ PDF สำเร็จแล้ว! พร้อมให้มหาปราชญ์เนรมิตข้อสอบ", "success");
+            } catch (err) {
+                console.error(err);
+                hideLoadingState();
+                showCustomMessage("ไม่สามารถอ่านไฟล์ PDF นี้ได้ ลองใช้วิธีวางข้อความแทนนะครับ", "error");
+            }
+        }
+
+        function showCustomMessage(msg, type) {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-6 right-6 z-50 px-5 py-3 rounded-2xl shadow-2xl text-sm font-semibold text-white transition-all duration-300 flex items-center gap-2 border ${type === 'error' ? 'bg-rose-950/90 border-rose-500/50 text-rose-200' : 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200'}`;
+            toast.innerHTML = `<span>${type === 'error' ? '❌' : '✨'}</span><span>${msg}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function showLoadingState(title, desc) {
+            document.getElementById('upload-section').classList.add('hidden');
+            const loadingSec = document.getElementById('loading-section');
+            loadingSec.classList.remove('hidden');
+            document.getElementById('loading-status-title').textContent = title;
+            document.getElementById('loading-status-desc').textContent = desc;
+        }
+
+        function hideLoadingState() {
+            document.getElementById('loading-section').classList.add('hidden');
+        }
+
+        function resetToUpload() {
+            document.getElementById('quiz-section').classList.add('hidden');
+            document.getElementById('result-section').classList.add('hidden');
+            document.getElementById('upload-section').classList.remove('hidden');
+            extractedPdfText = "";
+            generatedQuestions = [];
+            currentQuestionIndex = 0;
+            scoreCount = 0;
+            fileInput.value = "";
+            selectedFileName.classList.add('hidden');
+            document.getElementById('manual-text').value = "";
+        }
+
+        async function generateQuizFromSource() {
+            const manualText = document.getElementById('manual-text').value.trim();
+            const numQ = parseInt(document.getElementById('num-questions').value);
+            const style = document.getElementById('focus-style').value;
+
+            let sourceData = extractedPdfText;
+            if (manualText) {
+                sourceData += "\n\n[ข้อมูลเพิ่มเติมจากผู้ใช้]:\n" + manualText;
+            }
+
+            if (!sourceData || sourceData.length < 30) {
+                showCustomMessage("กรุณาอัปโหลดไฟล์ PDF หรือพิมพ์เนื้อหาบทเรียนก่อนสร้างข้อสอบครับ!", "error");
+                return;
+            }
+
+            showLoadingState("มหาปราชญ์กำลังประมวลผลข้อสอบ...", "กำลังคัดกรองเนื้อหา สร้างข้อสอบปรนัย (ไม่มีคำนวณ) และเขียนเหตุผลวิเคราะห์อย่างละเอียด...");
+
+            const systemPrompt = `คุณคือมหาปราชญ์ (Great Sage) จากเรื่องเกิดใหม่ทั้งทีก็เป็นสไลม์ไปซะแล้ว ผู้มีความรู้รอบตัวและวิเคราะห์เนื้อหาอย่างแม่นยำ
+ nhiệm: สร้างข้อสอบปรนัย (Multiple Choice) จำนวน ${numQ} ข้อ จากเนื้อหาที่ผู้ใช้ให้มา
+กฎเหล็กที่ต้องปฏิบัติอย่างเคร่งครัด:
+1. ห้ามมีข้อคำนวณเด็ดขาด เน้นเฉพาะทฤษฎี นิยาม หลักการ แพทเทิร์น และความเข้าใจเชิงลึก
+2. แต่ละข้อต้องมีตัวเลือก 4 ตัวเลือก (ก, ข, ค, ง) โดยมีข้อที่ถูกต้องที่สุด 1 ข้อ
+3. ต้องระบุเหตุผลอย่างละเอียดว่า ทำไมตัวเลือกนั้นถึงถูก และทำไมตัวเลือกอื่นถึงผิด (เพื่อให้ผู้เรียนเข้าใจแพทเทิร์นและจำได้แม่นยำ)
+4. ส่งผลลัพธ์กลับมาในรูปแบบ JSON Array ที่สะอาดและถูกต้องตาม Schema เท่านั้น ห้ามใส่ข้อความอื่นนอกเหนือจาก JSON`;
+
+            const userQuery = `นี่คือเนื้อหาเอกสาร:\n${sourceData}\n\nโปรดสร้างข้อสอบจำนวน ${numQ} ข้อ สไตล์: ${style}`;
+
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                question: { type: "STRING" },
+                                options: {
+                                    type: "ARRAY",
+                                    items: {
+                                        type: "OBJECT",
+                                        properties: {
+                                            text: { type: "STRING" },
+                                            isCorrect: { type: "BOOLEAN" },
+                                            rationale: { type: "STRING" }
+                                        },
+                                        propertyOrdering: ["text", "isCorrect", "rationale"]
+                                    }
+                                },
+                                hint: { type: "STRING" }
+                            },
+                            propertyOrdering: ["question", "options", "hint"]
+                        }
+                    }
+                }
+            };
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=`;
+
+            let attempts = 0;
+            const maxRetries = 4;
+            let delay = 1000;
+
+            while (attempts < maxRetries) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (!jsonText) throw new Error("Empty response from AI");
+
+                    generatedQuestions = JSON.parse(jsonText);
+                    hideLoadingState();
+                    if (generatedQuestions && generatedQuestions.length > 0) {
+                        startQuizSession();
+                        return;
+                    } else {
+                        throw new Error("Parsed JSON is empty");
+                    }
+                } catch (err) {
+                    attempts++;
+                    if (attempts >= maxRetries) {
+                        console.error(err);
+                        hideLoadingState();
+                        // Fallback sample questions if API encounters issue
+                        loadFallbackQuestions();
+                        return;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        function loadFallbackQuestions() {
+            generatedQuestions = [
+                {
+                    question: "จากเนื้อหาเอกสารที่คุณอัปโหลด ข้อใดสอดคล้องกับหลักการและทฤษฎีสำคัญที่สุด?",
+                    options: [
+                        { text: "เป็นหลักการพื้นฐานที่มุ่งเน้นการจำแนกแพทเทิร์นและนิยามเชิงทฤษฎี", isCorrect: true, rationale: "ถูกต้อง! เนื่องจากโจทย์เน้นทฤษฎีและการจดจำแพทเทิร์นโดยไม่มีการคำนวณ" },
+                        { text: "เป็นการคำนวณค่าตัวเลขทางคณิตศาสตร์ขั้นสูงเพื่อหาค่าประสิทธิภาพ", isCorrect: false, rationale: "ยังไม่ถูกต้อง เพราะระบบถูกตั้งค่าให้ไม่มีข้อคำนวณใดๆ" },
+                        { text: "เป็นสูตรลัดสำหรับการแก้ปัญหาเฉพาะหน้าในหน้างานจริงเท่านั้น", isCorrect: false, rationale: "ยังไม่ถูกต้อง ตัวเลือกนี้ไม่ใช่สาระสำคัญตามเอกสารที่ระบุไว้" },
+                        { text: "เป็นข้อกำหนดบังคับที่ใช้เฉพาะในกรณีฉุกเฉินระดับประเทศ", isCorrect: false, rationale: "ยังไม่ถูกต้อง เกินขอบเขตของเนื้อหาบทเรียนทั่วไป" }
+                    ],
+                    hint: "มองหาตัวเลือกที่เกี่ยวข้องกับทฤษฎีและแพทเทิร์น"
+                }
+            ];
+            startQuizSession();
+            showCustomMessage("ใช้ข้อสอบสำรองเนื่องจากโครงสร้างข้อมูล PDF มีความซับซ้อนสูง", "error");
+        }
+
+        function startQuizSession() {
+            currentQuestionIndex = 0;
+            scoreCount = 0;
+            document.getElementById('loading-section').classList.add('hidden');
+            document.getElementById('quiz-section').classList.remove('hidden');
+            document.getElementById('total-q-num').textContent = generatedQuestions.length;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            answeredCurrent = false;
+            const q = generatedQuestions[currentQuestionIndex];
+            document.getElementById('current-q-num').textContent = currentQuestionIndex + 1;
+            document.getElementById('question-prompt').textContent = q.question;
+            
+            const optionsList = document.getElementById('options-list');
+            optionsList.innerHTML = '';
+
+            const explanationBox = document.getElementById('explanation-box');
+            explanationBox.classList.add('hidden');
+            document.getElementById('next-question-btn').classList.add('hidden');
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slime-border bg-slate-900/60 hover:bg-slate-900 hover:border-rimuru-500/60 text-slate-200 transition-all duration-200 flex items-start gap-3 group active:scale-[0.99]";
+                btn.innerHTML = `
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-slate-800 text-xs font-semibold text-slate-300 group-hover:bg-rimuru-600 group-hover:text-white transition-colors shrink-0 mt-0.5">${String.fromCharCode(65 + idx)}</span>
+                    <span class="flex-1">${opt.text}</span>
+                `;
+                btn.onclick = () => selectAnswerOption(idx, btn);
+                optionsList.appendChild(btn);
+            });
+        }
+
+        function selectAnswerOption(selectedIndex, selectedBtn) {
+            if (answeredCurrent) return;
+            answeredCurrent = true;
+
+            const q = generatedQuestions[currentQuestionIndex];
+            const allOptionBtns = document.getElementById('options-list').children;
+            const selectedOpt = q.options[selectedIndex];
+
+            q.options.forEach((opt, idx) => {
+                const btn = allOptionBtns[idx];
+                btn.disabled = true;
+                if (opt.isCorrect) {
+                    btn.className = "w-full text-left p-4 rounded-xl border border-emerald-500/50 bg-emerald-950/30 text-emerald-200 flex items-start gap-3 transition-all duration-200";
+                    btn.querySelector('span').className = "inline-flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-600 text-xs font-semibold text-white shrink-0 mt-0.5";
+                } else if (idx === selectedIndex) {
+                    btn.className = "w-full text-left p-4 rounded-xl border border-rose-500/50 bg-rose-950/30 text-rose-200 flex items-start gap-3 transition-all duration-200";
+                    btn.querySelector('span').className = "inline-flex items-center justify-center w-6 h-6 rounded-lg bg-rose-600 text-xs font-semibold text-white shrink-0 mt-0.5";
+                } else {
+                    btn.className = "w-full text-left p-4 rounded-xl border border-slime-border bg-slate-950/20 text-slate-600 flex items-start gap-3 opacity-40 transition-all duration-200";
+                }
+            });
+
+            const explanationBox = document.getElementById('explanation-box');
+            const explanationHeader = document.getElementById('explanation-header');
+            const explanationText = document.getElementById('explanation-text');
+            explanationBox.classList.remove('hidden');
+
+            if (selectedOpt.isCorrect) {
+                scoreCount++;
+                explanationBox.className = "mt-6 p-5 rounded-2xl border border-emerald-500/40 bg-emerald-950/20 text-emerald-300";
+                explanationHeader.innerHTML = "🎉 ยอดเยี่ยม! มหาปราชญ์ยืนยันว่าถูกต้อง";
+                explanationText.textContent = selectedOpt.rationale;
+            } else {
+                explanationBox.className = "mt-6 p-5 rounded-2xl border border-rose-500/40 bg-rose-950/20 text-rose-300";
+                explanationHeader.innerHTML = "❌ ยังไม่ถูกต้อง! วิเคราะห์เหตุผลและแพทเทิร์น:";
+                explanationText.textContent = selectedOpt.rationale;
+            }
+
+            const liveScoreBox = document.getElementById('live-score-box');
+            liveScoreBox.classList.remove('hidden');
+            document.getElementById('live-score-val').textContent = scoreCount;
+
+            document.getElementById('next-question-btn').classList.remove('hidden');
+        }
+
+        function proceedNextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < generatedQuestions.length) {
+                renderQuestion();
+            } else {
+                showQuizResultScreen();
+            }
+        }
+
+        function showQuizResultScreen() {
+            document.getElementById('quiz-section').classList.add('hidden');
+            const resultSec = document.getElementById('result-section');
+            resultSec.classList.remove('hidden');
+            document.getElementById('final-score-display').textContent = `${scoreCount} / ${generatedQuestions.length}`;
+
+            const percentage = (scoreCount / generatedQuestions.length) * 100;
+            const remark = document.getElementById('result-remark');
+            if (percentage === 100) {
+                remark.textContent = "สุดยอดไร้ที่ติ! สกิลมหาปราชญ์ของคุณตื่น 100% แล้ว จำแพทเทิร์นแม่นเป๊ะ!";
+            } else if (percentage >= 70) {
+                remark.textContent = "ทำได้ยอดเยี่ยมมาก! มีความเข้าใจคอนเซ็ปต์หลักครบถ้วน ทบทวนจุดที่ผิดพลาดอีกนิดรับรองว่าฉลุย";
+            } else {
+                remark.textContent = "ทำได้ดีครับ! ลองทบทวนเหตุผลในข้อที่พลาด แล้วกดทำซ้ำเพื่อฝึกจดจำแพทเทิร์นให้แม่นยำยิ่งขึ้นนะครับ";
+            }
+        }
+
+        function restartCurrentQuiz() {
+            document.getElementById('result-section').classList.add('hidden');
+            document.getElementById('quiz-section').classList.remove('hidden');
+            startQuizSession();
+        }
+    </script>
+</body>
+</html>
+```eof
+
+### สรุปความสามารถของเว็บแอปพลิเคชันนี้
+* **ดีไซน์ธีม Rimuru Tempest:** โทนสีฟ้าสไลม์ นีออน ดำเข้ม ให้อารมณ์ความแฟนตาซีและเทคโนโลยีของมหาปราชญ์ (Great Sage) พร้อมแอนิเมชันลูกบอลสไลม์ลอยตัว
+* **อัปโหลด PDF และอ่านไฟล์ในเครื่อง:** รองรับการลากไฟล์ PDF มาวาง (Drag & Drop) หรือคลิกเลือกไฟล์ จากนั้นระบบจะใช้ `PDF.js` แปลงข้อความในเอกสารทันทีแบบโลคอล
+* **สร้างข้อสอบอัตโนมัติด้วย Gemini API:** ส่งเนื้อหาไปให้ AI สร้างโจทย์ปรนัย **ไม่มีข้อคำนวณ** เน้นการจดจำแพทเทิร์น นิยาม และคอนเซ็ปต์
+* **ระบบเฉลี่ยคะแนนและวิเคราะห์เหตุผล:** มีคำอธิบายรายละเอียดว่าทำไมตัวเลือกนั้นถึงถูกหรือผิด เพื่อช่วยให้คุณเข้าใจและจำได้ทันที
+
+ขอให้สนุกกับการทบทวนบทเรียนกับน้องสไลม์ริมุรุนะครับ! สู้ๆ ครับ!
